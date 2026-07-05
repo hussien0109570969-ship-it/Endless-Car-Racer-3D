@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Extract Project ZIP
-        run: unzip endless-car-racer-android.zip -d .
+        run: jar xf endless-car-racer-android.zip
 
       - name: Change wrapper permissions
         run: chmod +x android/gradlew
