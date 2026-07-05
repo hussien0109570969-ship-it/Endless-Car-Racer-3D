@@ -24,14 +24,14 @@ jobs:
         mkdir game_folder
         unzip -q endless-car-racer-android.zip -d game_folder
 
-    - name: Build APK
+    - name: Build and Assemble
       run: |
         cd game_folder
-        # الانتقال لمجلد الاندرويد الرئيسي
+        # الانتقال لمجلد المشروع
         cd $(find . -maxdepth 2 -name "gradlew" -exec dirname {} \;)
         chmod +x gradlew
-        # إضافة أمر لتخطي تعارض الإصدارات
-        ./gradlew assembleDebug -Pandroid.suppressUnsupportedCompileSdk=34
+        # بناء المكتبات أولاً ثم التطبيق لتجنب خطأ No variants exist
+        ./gradlew :capacitor-android:assembleDebug :app:assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
