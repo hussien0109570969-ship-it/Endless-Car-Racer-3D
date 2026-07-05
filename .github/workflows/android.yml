@@ -19,7 +19,7 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    - name: Extract ZIP to a clean folder
+    - name: Extract ZIP
       run: |
         mkdir game_folder
         unzip -q endless-car-racer-android.zip -d game_folder
@@ -27,13 +27,15 @@ jobs:
     - name: Build APK
       run: |
         cd game_folder
-        cd $(dirname $(find . -name "gradlew" | head -n 1))
+        # الانتقال لمجلد الاندرويد الرئيسي
+        cd $(find . -maxdepth 2 -name "gradlew" -exec dirname {} \;)
         chmod +x gradlew
-        ./gradlew assembleDebug
+        # إضافة أمر لتخطي تعارض الإصدارات
+        ./gradlew assembleDebug -Pandroid.suppressUnsupportedCompileSdk=34
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: EndlessCarRacer-APK
-        path: "**/*.apk"
+        path: "**/build/outputs/apk/debug/*.apk"
         
